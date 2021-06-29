@@ -76,6 +76,8 @@ public class TimelineActivity extends AppCompatActivity {
             // Compose icon has been selected
             Toast.makeText(this, "Compose!", Toast.LENGTH_LONG).show();
             // Navigate to the compose activity.
+            Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
