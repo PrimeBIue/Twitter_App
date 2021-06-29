@@ -10,9 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
-import com.example.twitter_app.MainActivity;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,14 +50,14 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
 
+        populateHomeTimeline();
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onLogoutButton(); // navigate backwards to Login screen
             }
         });
-
-        populateHomeTimeline();
     }
 
     private void populateHomeTimeline() {
@@ -83,9 +84,11 @@ public class TimelineActivity extends AppCompatActivity {
     }
     // TimelineActivity.java
     void onLogoutButton() {
-        client.clearAccessToken(); // forget who's logged in
+        TwitterApp.getRestClient(this).clearAccessToken(); // forget who's logged in
         Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
-        startActivity(i); // navigate backwards to Login screen
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
     }
 
 }
