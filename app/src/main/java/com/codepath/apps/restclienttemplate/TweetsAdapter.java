@@ -1,6 +1,12 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+
+import android.net.ParseException;
+import android.os.Build;
+
+
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +22,10 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
@@ -60,17 +70,59 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageView ivProfileImage;
         TextView tvBody;
         TextView tvScreenName;
+        TextView tvRelativeTime;
+
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
         }
+
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
+            tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
         }
     }
+    public String getRelativeTimeAgo(String rawJsonDate) {
+        String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(rawJsonDate).getTime();
+            relativeDate = getAbbreviatedTimeSpan(dateMillis);
+        } catch (ParseException | java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
+    }
+
+    public static String getAbbreviatedTimeSpan(long timeMillis) {
+        long span = Math.max(System.currentTimeMillis() - timeMillis, 0);
+        if (span >= DateUtils.YEAR_IN_MILLIS) {
+            return (span / DateUtils.YEAR_IN_MILLIS) + "y";
+        }
+        if (span >= DateUtils.WEEK_IN_MILLIS) {
+            return (span / DateUtils.WEEK_IN_MILLIS) + "w";
+        }
+        if (span >= DateUtils.DAY_IN_MILLIS) {
+            return (span / DateUtils.DAY_IN_MILLIS) + "d";
+        }
+        if (span >= DateUtils.HOUR_IN_MILLIS) {
+            return (span / DateUtils.HOUR_IN_MILLIS) + "h";
+        }
+        if (span >= DateUtils.MINUTE_IN_MILLIS) {
+            return (span / DateUtils.MINUTE_IN_MILLIS) + "m";
+        }
+        return (span / DateUtils.SECOND_IN_MILLIS) + "s";
+    }
 }
+
+
