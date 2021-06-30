@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
     Context context;
@@ -85,15 +87,25 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
 
         public void bind(Tweet tweet) {
+
+            int radius = 30; // corner radius, higher value = more rounded
+            int margin = 10; // crop margin, set to 0 for corners with no crop
+            Log.i("Adapter", tweet.body);
             tvBody.setText(tweet.body);
             tvScreenName.setText(tweet.user.screenName);
             tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
-            Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            Glide.with(context)
+                    .load(tweet.user.profileImageUrl)
+                    .into(ivProfileImage);
 
             if (tweet.entities.mediaUrl == null) {
                 ivMedia.setVisibility(View.GONE);
             } else {
-                Glide.with(context).load(tweet.entities.mediaUrl).into(ivMedia);
+                ivMedia.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .load(tweet.entities.mediaUrl)
+                        .transform(new RoundedCornersTransformation(radius+20, margin))
+                        .into(ivMedia);
             }
 
 

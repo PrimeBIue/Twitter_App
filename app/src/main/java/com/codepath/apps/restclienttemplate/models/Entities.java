@@ -1,5 +1,7 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ public class Entities {
         Entities entities = new Entities();
         if (jsonObject.has("media")) {
             JSONArray jsonArray = jsonObject.getJSONArray("media");
+            Log.i("Entities", jsonArray.toString());
             JSONObject media = jsonArray.getJSONObject(0);
             entities.mediaUrl = media.getString("media_url_https");
         }
