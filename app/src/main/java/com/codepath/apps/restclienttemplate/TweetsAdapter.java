@@ -7,6 +7,7 @@ import android.os.Build;
 
 
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,6 +72,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvScreenName;
         TextView tvRelativeTime;
+        ImageView ivMedia;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -78,6 +80,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
+            ivMedia = itemView.findViewById(R.id.ivMedia);
         }
 
 
@@ -86,6 +89,14 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName.setText(tweet.user.screenName);
             tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+
+            if (tweet.entities.mediaUrl == null) {
+                ivMedia.setVisibility(View.GONE);
+            } else {
+                Glide.with(context).load(tweet.entities.mediaUrl).into(ivMedia);
+            }
+
+
         }
     }
     public String getRelativeTimeAgo(String rawJsonDate) {
