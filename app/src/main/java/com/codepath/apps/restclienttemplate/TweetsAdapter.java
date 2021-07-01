@@ -35,6 +35,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
     public interface OnClickListener {
         void onBtnLikeClicked(int position);
+        void onBtnReplyClicked(int position);
+        void onBtnRetweetClicked(int position);
     }
 
     Context context;
@@ -85,6 +87,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         ImageButton btnLike;
         ImageButton btnRetweet;
         ImageButton btnReply;
+        TextView tvName;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -96,6 +99,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
             ivMedia = itemView.findViewById(R.id.ivMedia);
+            tvName = itemView.findViewById(R.id.tvName);
         }
 
 
@@ -105,8 +109,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             int margin = 10; // crop margin, set to 0 for corners with no crop
             Log.i("Adapter", tweet.body);
             tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
+            tvScreenName.setText(tweet.user.name);
             tvRelativeTime.setText(getRelativeTimeAgo(tweet.createdAt));
+            tvName.setText("@" + tweet.user.screenName);
             Glide.with(context)
                     .load(tweet.user.profileImageUrl)
                     .into(ivProfileImage);
@@ -126,6 +131,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                 public void onClick(View v) { clickListener.onBtnLikeClicked(getAdapterPosition()); }
             });
 
+            btnReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) { clickListener.onBtnReplyClicked(getAdapterPosition()); }
+            });
+
+            btnRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) { clickListener.onBtnRetweetClicked(getAdapterPosition()); }
+            });
         }
     }
     public String getRelativeTimeAgo(String rawJsonDate) {

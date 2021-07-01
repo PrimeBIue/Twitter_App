@@ -8,6 +8,7 @@
         android:iconTint="@color/twitter_blue"
         android:orderInCategory="99"
         android:title="Loading..."
+        android:visible="false"
         app:actionLayout="@layout/action_view_progress"
         app:showAsAction="always" />
 

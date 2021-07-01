@@ -54,8 +54,6 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_timeline);
         // Setup Swipe container
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -63,7 +61,6 @@ public class TimelineActivity extends AppCompatActivity {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 fetchTimelineAsync();
             }
         });
@@ -107,6 +104,18 @@ public class TimelineActivity extends AppCompatActivity {
                         });
                     }
                 });
+            }
+
+            @Override
+            public void onBtnReplyClicked(int position) {
+                Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
+                intent.putExtra("screen_name", tweets.get(position).user.screenName);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+
+            @Override
+            public void onBtnRetweetClicked(int position) {
+
             }
         };
 

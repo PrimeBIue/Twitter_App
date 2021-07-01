@@ -41,6 +41,10 @@ public class ComposeActivity extends AppCompatActivity {
         tilTweet = findViewById(R.id.tilTweet);
         tilTweet.setCounterMaxLength(MAX_TWEET_LENGTH);
 
+        if (getIntent().hasExtra("screen_name")) {
+            etCompose.setText("@" + getIntent().getStringExtra("screen_name"));
+        }
+
         // Set click listener on button
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
