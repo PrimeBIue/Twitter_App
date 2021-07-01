@@ -85,7 +85,18 @@ public class TimelineActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-                        Log.i(TAG, "onFailure liking tweet");
+
+                        client.unlikeTweet(tweets.get(position).id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i(TAG, "onSuccess unliking tweet");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i(TAG, "onFailure liking/unliking tweet");
+                            }
+                        });
                     }
                 });
             }
