@@ -7,6 +7,7 @@
             backward-compatibility can go here.
         -->
         <item name="colorPrimary">@color/twitter_blue</item>
+        <item name="colorPrimaryDark">@color/twitter_blue_fill_pressed</item>
     </style>
 
     <!-- Application theme. -->
