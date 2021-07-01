@@ -2,14 +2,24 @@ package com.codepath.apps.restclienttemplate;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+
+import okhttp3.Headers;
 
 public class DetailsAcitivity extends AppCompatActivity {
+
+    public static final String TAG = "DetailsActivity";
+
+    TwitterClient client;
 
     Long id;
     TextView tvBody;
@@ -25,6 +35,9 @@ public class DetailsAcitivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        client = TwitterApp.getRestClient(this);
+
         setContentView(R.layout.activity_details_acitivity);
 
         getSupportActionBar().setTitle("Tweet Details");
@@ -53,6 +66,61 @@ public class DetailsAcitivity extends AppCompatActivity {
                 .load(getIntent().getStringExtra("media_url"))
                 .into(ivMedia);
 
+        // Like button onclicklistener
+        btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                client.likeTweet(id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.i(TAG, "onSuccess liking tweet: " + id);
+                    }
 
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        client.unlikeTweet(id, new JsonHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                                Log.i(TAG, "onSuccess unliking tweet");
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                                Log.i(TAG, "onFailure liking/unliking tweet");
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // Retweet button onclicklistener
+        btnRetweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                client.retweetTweet(id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.i(TAG, "onSuccess retweeting tweet: " + id);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Log.i(TAG, "onFailure retweeting tweet");
+                    }
+                });
+            }
+        });
+
+        // Reply button onclicklistener
+        btnReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsAcitivity.this, ComposeActivity.class);
+                intent.putExtra("screen_name", getIntent().getStringExtra("screen_name"));
+                intent.putExtra("id", id);
+                startActivityForResult(intent, 21);
+            }
+        });
     }
 }
