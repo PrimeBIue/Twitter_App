@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,10 +33,16 @@ import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
 
+    public interface OnClickListener {
+        void onBtnLikeClicked(int position);
+    }
+
     Context context;
     List<Tweet> tweets;
+    OnClickListener clickListener;
     // Pass in context and list of tweets
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context, List<Tweet> tweets, OnClickListener clickListener) {
+        this.clickListener = clickListener;
         this.context = context;
         this.tweets = tweets;
     }
@@ -75,9 +82,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvScreenName;
         TextView tvRelativeTime;
         ImageView ivMedia;
+        ImageButton btnLike;
+        ImageButton btnRetweet;
+        ImageButton btnReply;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
+            btnLike = itemView.findViewById(R.id.btnLike);
+            btnRetweet = itemView.findViewById(R.id.btnRetweet);
+            btnReply = itemView.findViewById(R.id.btnReply);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
@@ -108,6 +121,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
                         .into(ivMedia);
             }
 
+            btnLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) { clickListener.onBtnLikeClicked(getAdapterPosition()); }
+            });
 
         }
     }

@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 
@@ -72,8 +73,26 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets = findViewById(R.id.rvTweets);
         rvTweets.addItemDecoration(new DividerItemDecoration(rvTweets.getContext(), DividerItemDecoration.VERTICAL));
         // Init list of tweets and adapter
+        TweetsAdapter.OnClickListener onClickListener = new TweetsAdapter.OnClickListener() {
+            @Override
+            public void onBtnLikeClicked(int position) {
+
+                client.likeTweet(tweets.get(position).id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.i(TAG, "onSuccess liking tweet: " + tweets.get(position).id);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Log.i(TAG, "onFailure liking tweet");
+                    }
+                });
+            }
+        };
+
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, onClickListener);
         // Configure Recycler View: layout manager and adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
@@ -86,6 +105,8 @@ public class TimelineActivity extends AppCompatActivity {
                 onLogoutButton(); // navigate backwards to Login screen
             }
         });
+
+
     }
 
     private void fetchTimelineAsync() {
