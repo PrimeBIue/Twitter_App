@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,6 +29,7 @@ import org.json.JSONException;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -36,26 +39,31 @@ public class TimelineActivity extends AppCompatActivity {
     public static final String TAG = "TimeLineActivity";
     public static final int REQUEST_CODE = 20;
 
+    private EndlessRecyclerViewScrollListener scrollListener;
+
     TwitterClient client;
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
     Button btnLogout;
     SwipeRefreshLayout swipeContainer;
+    MenuItem miActionProgressItem;
+    long maxId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         setContentView(R.layout.activity_timeline);
-        getSupportActionBar().setTitle(null);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_logo_white);
         // Setup Swipe container
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
                 fetchTimelineAsync();
             }
         });
@@ -105,8 +113,21 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets, onClickListener);
         // Configure Recycler View: layout manager and adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+
+        rvTweets.setLayoutManager(linearLayoutManager);
         rvTweets.setAdapter(adapter);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore");
+                loadNextDataFromApi(page);
+            }
+        };
+
+        rvTweets.addOnScrollListener(scrollListener);
 
         populateHomeTimeline();
 
@@ -116,25 +137,79 @@ public class TimelineActivity extends AppCompatActivity {
                 onLogoutButton(); // navigate backwards to Login screen
             }
         });
+    }
 
+    private void loadNextDataFromApi(int page) {
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONArray jsonArray = json.jsonArray;
 
+                try {
+                    adapter.addALl(Tweet.fromJsonArray(jsonArray));
+                    Tweet minIdTweet = tweets.stream()
+                            .min(Comparator.comparingLong(Tweet::getId))
+                            .get();
+                    maxId = minIdTweet.id;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        getSupportActionBar().setTitle(null);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_logo_white);
+
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        // return to finish
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 
     private void fetchTimelineAsync() {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        showProgressBar();
+        client.getHomeTimeline((long) 0, new JsonHttpResponseHandler() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 adapter.clear();
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     adapter.addALl(Tweet.fromJsonArray(jsonArray));
+                    Tweet minIdTweet = tweets.stream()
+                            .min(Comparator.comparingLong(Tweet::getId))
+                            .get();
+                    maxId = minIdTweet.id;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 swipeContainer.setRefreshing(false);
+                hideProgressBar();
             }
 
             @Override
@@ -149,6 +224,7 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; adds items to the action bar if present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Store instance of the menu item containing progress
         return true;
     }
 
@@ -180,7 +256,9 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
     private void populateHomeTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSuccess" + json);
@@ -188,11 +266,14 @@ public class TimelineActivity extends AppCompatActivity {
                 try {
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
+                    Tweet minIdTweet = tweets.stream()
+                            .min(Comparator.comparingLong(Tweet::getId))
+                            .get();
+                    maxId = minIdTweet.id;
                 } catch (JSONException e) {
                     Log.e(TAG, "Json exception", e);
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -200,6 +281,7 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.e(TAG, "onFailure" + response, throwable);
             }
         });
+
     }
     // TimelineActivity.java
     void onLogoutButton() {

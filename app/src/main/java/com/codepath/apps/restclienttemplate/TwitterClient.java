@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.asynchttpclient.RequestParams;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -44,12 +45,19 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 	// CHANGE THIS
 	// DEFINE METHODS for different API endpoints here
-	public void getHomeTimeline(JsonHttpResponseHandler handler) {
+	public void getHomeTimeline(Long maxId, JsonHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("count", 25);
-		params.put("since_id", 1);
+
+		if (maxId != null && maxId != 0) {
+			Log.i("Tweets", String.valueOf(maxId));
+			params.put("max_id", maxId - 1);
+		} else {
+			params.put("since_id", 1);
+		}
+
 		params.put("tweet_mode", "extended");
 		client.get(apiUrl, params, handler);
 	}
