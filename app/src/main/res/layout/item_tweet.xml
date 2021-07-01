@@ -86,7 +86,7 @@
         android:layout_below="@+id/ivMedia"
         android:layout_marginStart="115dp"
         android:layout_marginTop="5dp"
-
+        android:layout_marginBottom="5dp"
         android:layout_toEndOf="@+id/btnReply"
         android:background="@null"
         app:srcCompat="@drawable/ic_vector_retweet_stroke" />

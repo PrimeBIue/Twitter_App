@@ -110,6 +110,7 @@ public class TimelineActivity extends AppCompatActivity {
             public void onBtnReplyClicked(int position) {
                 Intent intent = new Intent(TimelineActivity.this, ComposeActivity.class);
                 intent.putExtra("screen_name", tweets.get(position).user.screenName);
+                intent.putExtra("id", tweets.get(position).id);
                 startActivityForResult(intent, REQUEST_CODE);
             }
 
