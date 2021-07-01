@@ -115,7 +115,17 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onBtnRetweetClicked(int position) {
+                client.retweetTweet(tweets.get(position).id, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        Log.i(TAG, "onSuccess retweeting tweet: " + tweets.get(position).id);
+                    }
 
+                    @Override
+                    public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                        Log.i(TAG, "onFailure retweeting tweet");
+                    }
+                });
             }
         };
 

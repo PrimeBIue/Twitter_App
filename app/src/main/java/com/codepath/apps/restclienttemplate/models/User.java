@@ -23,7 +23,7 @@ public class User {
         user.profileImageUrl = jsonObject.getString("profile_image_url_https") + "";
 
         user.profileImageUrl = user.profileImageUrl.replaceAll("_normal.jpg", "_bigger.jpg");
-        
+
         return user;
     }
 }
