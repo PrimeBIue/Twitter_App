@@ -37,6 +37,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         void onBtnLikeClicked(int position);
         void onBtnReplyClicked(int position);
         void onBtnRetweetClicked(int position);
+        void onTvBodyCLicked(int position);
     }
 
     Context context;
@@ -139,6 +140,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) { clickListener.onBtnRetweetClicked(getAdapterPosition()); }
+            });
+
+            tvBody.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) { clickListener.onTvBodyCLicked(getAdapterPosition()); }
             });
         }
     }

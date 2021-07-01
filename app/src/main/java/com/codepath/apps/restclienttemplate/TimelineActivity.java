@@ -128,6 +128,19 @@ public class TimelineActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void onTvBodyCLicked(int position) {
+                Intent intent = new Intent(TimelineActivity.this, DetailsAcitivity.class);
+                intent.putExtra("screen_name", tweets.get(position).user.screenName);
+                intent.putExtra("profile_image", tweets.get(position).user.profileImageUrl);
+                intent.putExtra("name", tweets.get(position).user.name);
+                intent.putExtra("body", tweets.get(position).body);
+                intent.putExtra("media_url", tweets.get(position).entities.mediaUrl);
+                intent.putExtra("id", tweets.get(position).id);
+                startActivity(intent);
+
+            }
         };
 
         tweets = new ArrayList<>();
