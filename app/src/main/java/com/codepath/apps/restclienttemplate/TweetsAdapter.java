@@ -2,6 +2,8 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.ParseException;
 
 
@@ -126,17 +128,26 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
 
             btnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) { clickListener.onBtnLikeClicked(getAdapterPosition()); }
+                public void onClick(View v) {
+                    btnLike.setColorFilter(Color.RED);
+                    clickListener.onBtnLikeClicked(getAdapterPosition());
+                }
             });
 
             btnReply.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) { clickListener.onBtnReplyClicked(getAdapterPosition()); }
+                public void onClick(View view) {
+                    btnReply.setColorFilter(Color.BLUE);
+                    clickListener.onBtnReplyClicked(getAdapterPosition());
+                }
             });
 
             btnRetweet.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) { clickListener.onBtnRetweetClicked(getAdapterPosition()); }
+                public void onClick(View view) {
+                    btnRetweet.setColorFilter(Color.GREEN);
+                    clickListener.onBtnRetweetClicked(getAdapterPosition());
+                }
             });
 
             tvBody.setOnClickListener(new View.OnClickListener() {

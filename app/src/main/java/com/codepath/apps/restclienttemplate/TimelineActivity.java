@@ -84,6 +84,7 @@ public class TimelineActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
                         Log.i(TAG, "onSuccess liking tweet: " + tweets.get(position).id);
+
                     }
 
                     @Override
