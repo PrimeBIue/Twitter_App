@@ -54,6 +54,8 @@ GIF created with [LICEcap](https://www.cockos.com/licecap/).
 
 Describe any challenges encountered while building the app.
 
+This app was significantly harder than Flixter. I took my time understanding how to make requests and posts to the Twitter API. I was able to make it so each feature works properly, the user can like and dislike a tweet, the user can retweet and also reply properly to any tweet (This can only be confirmed by looking at it on the actual twitter website). The icons were quite a challenge, I had to get some extra ones that I could use because not all the icons were on the files provided, so I learned how to create new vectors and also how to tint them to the color I wanted. I really wanted to implement the compose activity as modal overlay, but I got really lost while doing it and I just didn't feel like I had the time to implement it. Overall, this project felt a lot more challenging than the last one but it gave me a very good understanding of how API requests work.
+
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
