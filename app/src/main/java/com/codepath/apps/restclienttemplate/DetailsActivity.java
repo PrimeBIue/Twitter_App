@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +74,7 @@ public class DetailsActivity extends AppCompatActivity {
                 client.likeTweet(id, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        btnLike.setColorFilter(Color.RED);
                         Log.i(TAG, "onSuccess liking tweet: " + id);
                     }
 
@@ -82,6 +84,7 @@ public class DetailsActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(int statusCode, Headers headers, JSON json) {
                                 Log.i(TAG, "onSuccess unliking tweet");
+                                btnLike.setColorFilter(Color.BLACK);
                             }
 
                             @Override
@@ -101,6 +104,7 @@ public class DetailsActivity extends AppCompatActivity {
                 client.retweetTweet(id, new JsonHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Headers headers, JSON json) {
+                        btnRetweet.setColorFilter(Color.GREEN);
                         Log.i(TAG, "onSuccess retweeting tweet: " + id);
                     }
 
@@ -116,6 +120,7 @@ public class DetailsActivity extends AppCompatActivity {
         btnReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btnReply.setColorFilter(Color.BLUE);
                 Intent intent = new Intent(DetailsActivity.this, ComposeActivity.class);
                 intent.putExtra("screen_name", getIntent().getStringExtra("screen_name"));
                 intent.putExtra("id", id);
