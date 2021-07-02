@@ -16,8 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
 
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -131,7 +129,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onTvBodyCLicked(int position) {
-                Intent intent = new Intent(TimelineActivity.this, DetailsAcitivity.class);
+                Intent intent = new Intent(TimelineActivity.this, DetailsActivity.class);
                 intent.putExtra("screen_name", tweets.get(position).user.screenName);
                 intent.putExtra("profile_image", tweets.get(position).user.profileImageUrl);
                 intent.putExtra("name", tweets.get(position).user.name);

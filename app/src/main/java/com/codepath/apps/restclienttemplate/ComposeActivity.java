@@ -37,7 +37,7 @@ public class ComposeActivity extends AppCompatActivity {
 
         client = TwitterApp.getRestClient(this);
         etCompose = findViewById(R.id.etCompose);
-        btnTweet = findViewById(R.id.btnTweet);
+        btnTweet = findViewById(R.id.btnTweetF);
         tilTweet = findViewById(R.id.tilTweet);
         tilTweet.setCounterMaxLength(MAX_TWEET_LENGTH);
 

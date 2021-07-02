@@ -3,7 +3,6 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 
 import android.net.ParseException;
-import android.os.Build;
 
 
 import android.text.format.DateUtils;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +23,6 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -95,7 +92,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             btnLike = itemView.findViewById(R.id.btnLike);
             btnRetweet = itemView.findViewById(R.id.btnRetweet);
             btnReply = itemView.findViewById(R.id.btnReply);
-            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
+            ivProfileImage = itemView.findViewById(R.id.ivProfileImageF);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);

@@ -15,7 +15,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import okhttp3.Headers;
 
-public class DetailsAcitivity extends AppCompatActivity {
+public class DetailsActivity extends AppCompatActivity {
 
     public static final String TAG = "DetailsActivity";
 
@@ -48,7 +48,7 @@ public class DetailsAcitivity extends AppCompatActivity {
         tvScreenName = findViewById(R.id.tvName);
         tvName = findViewById(R.id.tvScreenName);
 
-        ivProfileImage = findViewById(R.id.ivProfileImage);
+        ivProfileImage = findViewById(R.id.ivProfileImageF);
         ivMedia = findViewById(R.id.ivMedia);
 
         btnLike = findViewById(R.id.btnLike);
@@ -56,7 +56,7 @@ public class DetailsAcitivity extends AppCompatActivity {
         btnReply = findViewById(R.id.btnReply);
 
         tvBody.setText(getIntent().getStringExtra("body"));
-        tvScreenName.setText(getIntent().getStringExtra("screen_name"));
+        tvScreenName.setText("@" + getIntent().getStringExtra("screen_name"));
         tvName.setText(getIntent().getStringExtra("name"));
 
         Glide.with(this)
@@ -116,7 +116,7 @@ public class DetailsAcitivity extends AppCompatActivity {
         btnReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DetailsAcitivity.this, ComposeActivity.class);
+                Intent intent = new Intent(DetailsActivity.this, ComposeActivity.class);
                 intent.putExtra("screen_name", getIntent().getStringExtra("screen_name"));
                 intent.putExtra("id", id);
                 startActivityForResult(intent, 21);
